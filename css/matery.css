@@ -159,7 +159,7 @@ code {
     right: 6px;
     z-index: 1;
     filter: invert(50%);
-    opacity: 0;
+    opacity: 0.8;
 }
 
 .code_lang {
@@ -1848,7 +1848,8 @@ footer .social-statis {
 }
 
 footer a {
-    color: #fff;
+  /*  color: #fff; */
+  color: #dbdbdb;
 }
 
 footer .copy-right {
@@ -1882,7 +1883,7 @@ footer .copy-right {
 
 .search-result-list .search-result-title {
     font-size: 1.4rem;
-    color: #42b983;
+    color: #666;
 }
 
 .search-result-list li {
@@ -2149,4 +2150,29 @@ footer .copy-right {
     height: 50px;
     padding: 0px;
     margin: 0px;
+}
+
+/* The overall background color, including navigation, mobile navigation, footer, tab, etc.. */
+.bg-color {
+    background-image: linear-gradient(to right, #4cbf30 0%, #0f9d58 100%);
+}
+
+@-webkit-keyframes rainbow {
+   /* Dynamically switch background colors. */
+}
+
+@keyframes rainbow {
+    /* Dynamically switch background colors. */
+}
+.bg-color {
+    background-image: linear-gradient(to right, #bf30ac 0%, #0f9d58 100%); //修改成自己喜欢的颜色值
+    opacity: 0.9;  //透明效果 值范围 0~1，看情况自己修改
+}
+/* 换成:红橙黄绿青蓝紫 背景渐变 洪卫 shw2018  add  2019.08.30  */
+@keyframes rainbow {
+    /* 0%,
+    100% {
+        background: rgb(255, 0, 0);
+        background: linear-gradient(45deg, rgba(255, 0, 0, 0.3) 0%, rgba(255, 165, 0, 0.3) 100%);
+                  }
 }
