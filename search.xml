@@ -4,13 +4,125 @@
   
     
     <entry>
-      <title>article title</title>
-      <link href="/2020/05/09/article-title/"/>
-      <url>/2020/05/09/article-title/</url>
+      <title>zabbix监控mysql8.0</title>
+      <link href="/2020/05/11/zabbix%E7%9B%91%E6%8E%A7mysql8-0/"/>
+      <url>/2020/05/11/zabbix%E7%9B%91%E6%8E%A7mysql8-0/</url>
       
-        <content type="html"><![CDATA[<p>1111111w1</p><script>        document.querySelectorAll('.github-emoji')          .forEach(el => {            if (!el.dataset.src) { return; }            const img = document.createElement('img');            img.style = 'display:none !important;';            img.src = el.dataset.src;            img.addEventListener('error', () => {              img.remove();              el.style.color = 'inherit';              el.style.backgroundImage = 'none';              el.style.background = 'none';            });            img.addEventListener('load', () => {              img.remove();            });            document.body.appendChild(img);          });      </script>]]></content>
+        <content type="html"><![CDATA[<p>上一次的文章写得简直惨不忍睹。</p><p>首先我用官方自带模板</p><p><img src="/images/pasted-5.png" alt="upload successful"></p><p> 然后就会出现</p><p><img src="/images/pasted-6.png" alt="upload successful"><br> 我是二进制部署</p><p><img src="/images/pasted-7.png" alt="upload successful"><br>就在源码包里有默认的mysql模板配置文件</p><p><img src="/images/pasted-8.png" alt="upload successful"></p><p> cp 至  /usr/local/zabbix/etc/zabbix-agent.d/</p><p> 然后在mysql的配置文件下配置有权限的用户即可</p><p><img src="/images/pasted-9.png" alt="upload successful"></p><p> 随后重启mysql and agentd</p><p><img src="/images/pasted-10.png" alt="upload successful"></p><ol start="2"><li><p>自定义脚本</p><pre class=" language-yml"><code class="language-yml">[root@zabbix scripts]# cat mysql.sh #!/bin/bash#用户名MYSQL_USER='root'#密码MYSQL_PASSWORD='shanyao@2020'#主机地址/IPMYSQL_HOST='127.0.0.1'#端口MYSQL_PORT='3306'#数据连接MYSQL_CONN="/usr/bin/mysqladmin"#参数是否正确if [ $# -ne "1" ];thenecho "arg error!"fi#获取数据case $1 inUptime)    result=`${MYSQL_CONN} -u${MYSQL_USER} -p${MYSQL_PASSWORD} 2>/dev/null status|awk  '{print $2}'`    echo $result    ;;Threads)    result=`${MYSQL_CONN} -u${MYSQL_USER} -p${MYSQL_PASSWORD} 2>/dev/null status|awk  '{print $4}'`    echo $result    ;;Questions)    result=`${MYSQL_CONN} -u${MYSQL_USER} -p${MYSQL_PASSWORD} 2>/dev/null status|awk  '{print $6}'`    echo $result    ;;Queries_avg)    result=`${MYSQL_CONN} -u${MYSQL_USER} -p${MYSQL_PASSWORD} 2>/dev/null status|awk  '{print $NF}'`    echo $result    ;;Com_update)    result=`${MYSQL_CONN} -u${MYSQL_USER} -p${MYSQL_PASSWORD} 2>/dev/null extended-status |grep -w "Com_update"|awk -F'|' '{print $3}'`    echo $result    ;;Slow_queries)    result=`${MYSQL_CONN}  -u${MYSQL_USER} -p${MYSQL_PASSWORD} 2>/dev/null status|awk '{print $9}'`    echo $result    ;;Com_select)    result=`${MYSQL_CONN} -u${MYSQL_USER} -p${MYSQL_PASSWORD} 2>/dev/null extended-status |grep -w "Com_select"|awk -F'|' '{print $3}'`    echo $result    ;;Com_rollback)    result=`${MYSQL_CONN} -u${MYSQL_USER} -p${MYSQL_PASSWORD} 2>/dev/null extended-status |grep -w "Com_rollback"|awk -F'|' '{print $3}'`    echo $result    ;;Com_insert)    result=`${MYSQL_CONN} -u${MYSQL_USER} -p${MYSQL_PASSWORD} 2>/dev/null extended-status |grep -w "Com_insert"|awk -F'|' '{print $3}'`    echo $result    ;;Com_delete)    result=`${MYSQL_CONN} -u${MYSQL_USER} -p${MYSQL_PASSWORD} 2>/dev/null extended-status |grep -w "Com_delete"|awk -F'|' '{print $3}'`    echo $result    ;;Com_commit)    result=`${MYSQL_CONN} -u${MYSQL_USER} -p${MYSQL_PASSWORD} 2>/dev/null extended-status |grep -w "Com_commit"|awk -F'|' '{print $3}'`    echo $result    ;;Bytes_sent)    result=`${MYSQL_CONN} -u${MYSQL_USER} -p${MYSQL_PASSWORD} 2>/dev/null extended-status |grep -w "Bytes_sent" |awk -F'|' '{print $3}'`    echo $result    ;;Bytes_received)    result=`${MYSQL_CONN} -u${MYSQL_USER} -p${MYSQL_PASSWORD} 2>/dev/null extended-status |grep -w "Bytes_received" |awk -F'|' '{print $3}'`    echo $result    ;;Com_begin)    result=`${MYSQL_CONN} -u${MYSQL_USER} -p${MYSQL_PASSWORD} 2>/dev/null extended-status |grep -w "Com_begin"|awk -F'|' '{print $3}'`    echo $result    ;;    *)    echo "Usage:$0(Uptime|Threads|Questions|Questions_avg|Com_update|Slow_queries|Com_select|Com_rollback|Questions|Com_insert|Com_delete|Com_commit|Bytes_sent|Bytes_received|Com_begin)"    ;;esac</code></pre></li></ol><p>````</p><pre class=" language-yml"><code class="language-yml">[root@zabbix scripts]# cd /usr/local/zabbix/etc/zabbix_agentd.conf.d/[root@zabbix zabbix_agentd.conf.d]# lsmysql_status.conf  userparameter_mysql.conf[root@zabbix zabbix_agentd.conf.d]# cat mysql_status.conf UserParameter=mysql.status[*],/server/scripts/mysql.sh $1#UserParameter=mysql.ping,HOME=/usr/local/zabbix/etc /usr/bin/mysqladmin -uroot -pshanyao@2020  ping|grep alive|wc -l#UserParameter=mysql.version,mysql -V |awk '{print $5}'|sed 's/,//'[root@zabbix zabbix_agentd.conf.d]# </code></pre><p>注释的条目是我在配置系统自带模板的时候，名称冲突<br>重启zabbix-agentd，在item监控项里添加<br><img src="/images/pasted-11.png" alt="upload successful"><br>后置创建图形 选中自建item项</p><p><img src="/images/pasted-12.png" alt="upload successful"></p><p><img src="/images/pasted-13.png" alt="upload successful"></p><script>        document.querySelectorAll('.github-emoji')          .forEach(el => {            if (!el.dataset.src) { return; }            const img = document.createElement('img');            img.style = 'display:none !important;';            img.src = el.dataset.src;            img.addEventListener('error', () => {              img.remove();              el.style.color = 'inherit';              el.style.backgroundImage = 'none';              el.style.background = 'none';            });            img.addEventListener('load', () => {              img.remove();            });            document.body.appendChild(img);          });      </script>]]></content>
       
       
+      <categories>
+          
+          <category> 监控 </category>
+          
+          <category> 数据库 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> mysql </tag>
+            
+            <tag> linux </tag>
+            
+            <tag> zabbix </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>1</title>
+      <link href="/2020/05/11/1/"/>
+      <url>/2020/05/11/1/</url>
+      
+        <content type="html"><![CDATA[<pre class=" language-yml"><code class="language-yml">---1111111111132423fdscnskcjslcsmjvsklnm;mrm -rf thile :  呵呵呵沉默抗衰老承诺书出名了山东青岛data: sdifm,s;o jfmsslnf mf1---</code></pre><p>dwdwdwd</p><script>        document.querySelectorAll('.github-emoji')          .forEach(el => {            if (!el.dataset.src) { return; }            const img = document.createElement('img');            img.style = 'display:none !important;';            img.src = el.dataset.src;            img.addEventListener('error', () => {              img.remove();              el.style.color = 'inherit';              el.style.backgroundImage = 'none';              el.style.background = 'none';            });            img.addEventListener('load', () => {              img.remove();            });            document.body.appendChild(img);          });      </script>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>ceph集群部署</title>
+      <link href="/2020/05/11/ceph%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/"/>
+      <url>/2020/05/11/ceph%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/</url>
+      
+        <content type="html"><![CDATA[<p>master node1 node2 client<br>192.168.1.31    master<br>192.168.1.29    node1<br>192.168.1.156 node2<br>192.168.1.98    client</p><p>yum install wget vim epel-release<br>配置阿里云的centos7镜像和ceph.repo库<br>[root@master ceph]# cat /etc/yum.repos.d/ceph.repo<br>[Ceph]<br>name=Ceph packages for $basearch<br>baseurl=<a href="https://mirrors.tuna.tsinghua.edu.cn/ceph/rpm-jewel/el7/$basearch" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/ceph/rpm-jewel/el7/$basearch</a><br>enabled=1<br>gpgcheck=1<br>type=rpm-md<br>gpgkey=<a href="https://mirrors.tuna.tsinghua.edu.cn/ceph/keys/release.asc" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/ceph/keys/release.asc</a><br>priority=1</p><p>[Ceph-noarch]<br>name=Ceph noarch packages<br>baseurl=<a href="https://mirrors.tuna.tsinghua.edu.cn/ceph/rpm-jewel/el7/noarch" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/ceph/rpm-jewel/el7/noarch</a><br>enabled=1<br>gpgcheck=1<br>type=rpm-md<br>gpgkey=<a href="https://mirrors.tuna.tsinghua.edu.cn/ceph/keys/release.asc" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/ceph/keys/release.asc</a><br>priority=1</p><p>[ceph-source]<br>name=Ceph source packages<br>baseurl=<a href="https://mirrors.tuna.tsinghua.edu.cn/ceph/rpm-jewel/el7/SRPMS" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/ceph/rpm-jewel/el7/SRPMS</a><br>enabled=1<br>gpgcheck=1<br>type=rpm-md<br>gpgkey=<a href="https://mirrors.tuna.tsinghua.edu.cn/ceph/keys/release.asc" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/ceph/keys/release.asc</a><br>priority=1</p><p>#关闭所有节点防火墙和SELINUX</p><p>yum install yum-utils ceph ceph-deploy　　#安装ceph主程序和管理工具</p><p>master节点：将ssh公钥导入其他节点方便调用时输入密码</p><p>ceph-deploy new node1 node2 初始化节点</p><p>cat /etc/ceph/ceph.conf　　#插入</p><p>osd pool default size = 2</p><p>ceph-deploy install node1 node2 #安装ceph</p><p>ceph-deploy mon create-initial 　　##初始化mon节点</p><hr><p>node1:fdisk -l<br>fdisk /dev/sdb<br>mkfs.xfs /dev/sdb1<br>mkdir /dev/local/osd1<br>vim /etc/fstab<br>/dev/sdb1 /dev/local/osd1 xfs defaults 0 0<br>chown ceph:ceph /dev/local/osd1<br>node2:fdisk -l<br>fdisk /dev/sdb<br>mkfs.xfs /dev/sdb1<br>mkdir /dev/local/osd1<br>vim /etc/fstab<br>/dev/sdb1 /dev/local/osd1 xfs defaults 0 0<br>chown ceph:ceph /dev/local/osd1</p><p>ceph-deploy osd prepare node1:/dev/local/osd1 node2:/dev/local/osd1<br>chmod +r /etc/ceph/ceph.client.admin.keyring<br>ceph-deploy osd activate node1:/dev/local/osd1 node2:/dev/local/osd1<br>ceph quorum_status –format json-pretty 　　##查看Ceph群集详细信息</p><p>ceph health</p><p>HEALTH_OK</p><p> #这里有一个警告 可以不用太在意</p><p>client测试</p><p>ceph-deploy install ceph-client 　　##提示输入密码</p><p>ceph-deploy admin ceph-client</p><p>chmod +r /etc/ceph/ceph.client.admin.keyring</p><p>master:　　ceph osd pool create cephfs_data 128 　　##数据存储池<br>pool ‘cephfs_data’ created<br>master:　　 ceph osd pool create cephfs_metadata 128 　　##元数据存储池<br>pool ‘cephfs_metadata’ created<br>master:　　ceph fs new cephfs cephfs_data cephfs_metadata 　　##创建文件系统<br>new fs with metadata pool 1 and data pool 2</p><p> 挂载</p><p>[root@ceph-client ~]# mkdir /mnt/ceph</p><p>[root@ceph-client ~]# grep key /etc/ceph/ceph.client.admin.keyring |awk ‘{print $3}’ &gt;&gt;/etc/ceph/admin.secret</p><p>[root@ceph-client ~]# cat /etc/ceph/admin.secret</p><p>AQCd/x9bsMqKFBAAZRNXpU5QstsPlfe1/FvPtQ==<br>mount -t ceph 192.168.1.29:6789:/ /mnt/ceph/ -v -o name=admin,secretfile=/etc/ceph/admin.secret</p><p>mount -t ceph 192.168.1.156:6789:/ /mnt/ceph1/ -v -o name=admin,secretfile=/etc/ceph/admin.secret</p><p>dd if=/dev/zero of=/mnt/ceph/1.file bs=1G count=1</p><script>        document.querySelectorAll('.github-emoji')          .forEach(el => {            if (!el.dataset.src) { return; }            const img = document.createElement('img');            img.style = 'display:none !important;';            img.src = el.dataset.src;            img.addEventListener('error', () => {              img.remove();              el.style.color = 'inherit';              el.style.backgroundImage = 'none';              el.style.background = 'none';            });            img.addEventListener('load', () => {              img.remove();            });            document.body.appendChild(img);          });      </script>]]></content>
+      
+      
+      <categories>
+          
+          <category> 存储 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 存储 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>nginx</title>
+      <link href="/2020/05/11/nginx/"/>
+      <url>/2020/05/11/nginx/</url>
+      
+        <content type="html"><![CDATA[<hr><p>title: typora-vue-theme主题介绍<br>date: 2018-09-07 09:25:00<br>author: 赵奇<br>img: /source/images/xxx.jpg<br>top: true<br>cover: true<br>coverImg: /images/1.jpg<br>password: 8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92<br>toc: false<br>mathjax: false<br>summary: 这是你自定义的文章摘要内容，如果这个属性有值，文章卡片摘要就显示这段文字，否则程序会自动截取文章的部分内容作为摘要<br>categories: Markdown<br>tags:</p><ul><li>linux </li><li>nginx</li><li>运维</li></ul><script>        document.querySelectorAll('.github-emoji')          .forEach(el => {            if (!el.dataset.src) { return; }            const img = document.createElement('img');            img.style = 'display:none !important;';            img.src = el.dataset.src;            img.addEventListener('error', () => {              img.remove();              el.style.color = 'inherit';              el.style.backgroundImage = 'none';              el.style.background = 'none';            });            img.addEventListener('load', () => {              img.remove();            });            document.body.appendChild(img);          });      </script>]]></content>
+      
+      
+      <categories>
+          
+          <category> Markdown </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> nginx </tag>
+            
+            <tag> linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>mysql8.0</title>
+      <link href="/2020/05/11/mysql8-0/"/>
+      <url>/2020/05/11/mysql8-0/</url>
+      
+        <content type="html"><![CDATA[<pre class=" language-yml"><code class="language-yml">---本文用mysql8.0.16和8.0.17做主从复制yum install mysql-comminuty-servergrep 'password' /var/log/mysql.log  //筛选临时密码mysqladmin -p'临时密码' password‘new’log-bin=mysql-binserver-id=1systemctl restart mysqldcreate user 'repl'@'%' identified with navite_password by   '密码'；grant replication salve on *.* to 'repl'@'%';flush privileges;show master status;mysqldump -uroot -p密码 -all-databases --master-data=1 > /root/all.sqlscp -r /root/all.sql root@从IP地址:/root从：yum install mysql-community-servergrep 'password' /var/log/mysql.log  //筛选临时密码mysqladmin -p'临时密码' password‘new’vi /etc/my.confservice-id=2mysql -h 主节点 -u用户 -p密码show grants; //看授权set sql_log_bin=0 //避免还原的时候生成大量的sql语句source /root/all.sql; change master to master_host='地址，master_user='用户‘,master_password='密码',master_port='端口‘；  //这里不加log_file是因为前面masterCHANGE MASTER TO MASTER_LOG_FILE='mysql-bin.000001', MASTER_LOG_POS=825start slave;show slave status\G;stop slave;---</code></pre><script>        document.querySelectorAll('.github-emoji')          .forEach(el => {            if (!el.dataset.src) { return; }            const img = document.createElement('img');            img.style = 'display:none !important;';            img.src = el.dataset.src;            img.addEventListener('error', () => {              img.remove();              el.style.color = 'inherit';              el.style.backgroundImage = 'none';              el.style.background = 'none';            });            img.addEventListener('load', () => {              img.remove();            });            document.body.appendChild(img);          });      </script>]]></content>
+      
+      
+      <categories>
+          
+          <category> linux </category>
+          
+          <category> 数据库 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> mysql </tag>
+            
+            <tag> 主从 </tag>
+            
+        </tags>
       
     </entry>
     
@@ -21,7 +133,7 @@
       <link href="/2020/05/08/hello-world/"/>
       <url>/2020/05/08/hello-world/</url>
       
-        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></tbody></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></tbody></table></figure><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></tbody></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></tbody></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p><script>        document.querySelectorAll('.github-emoji')          .forEach(el => {            if (!el.dataset.src) { return; }            const img = document.createElement('img');            img.style = 'display:none !important;';            img.src = el.dataset.src;            img.addEventListener('error', () => {              img.remove();              el.style.color = 'inherit';              el.style.backgroundImage = 'none';              el.style.background = 'none';            });            img.addEventListener('load', () => {              img.remove();            });            document.body.appendChild(img);          });      </script>]]></content>
+        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class=" language-bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span></code></pre><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class=" language-bash"><code class="language-bash">$ hexo server</code></pre><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class=" language-bash"><code class="language-bash">$ hexo generate</code></pre><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class=" language-bash"><code class="language-bash">$ hexo deploy</code></pre><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p><script>        document.querySelectorAll('.github-emoji')          .forEach(el => {            if (!el.dataset.src) { return; }            const img = document.createElement('img');            img.style = 'display:none !important;';            img.src = el.dataset.src;            img.addEventListener('error', () => {              img.remove();              el.style.color = 'inherit';              el.style.backgroundImage = 'none';              el.style.background = 'none';            });            img.addEventListener('load', () => {              img.remove();            });            document.body.appendChild(img);          });      </script>]]></content>
       
       
       

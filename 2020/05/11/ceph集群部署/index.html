@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Thomas">
+    <meta name="keywords" content="ceph集群部署, Thomas">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Thomas</title>
+    <title>ceph集群部署 | Thomas</title>
     <link rel="icon" type="image/jpeg" href="/22.jpg">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -246,12 +246,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/2.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title"></h1>
+                    <h1 class="description center-align post-title">ceph集群部署</h1>
                 </div>
             </div>
         </div>
@@ -366,12 +366,25 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">No tag</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E5%AD%98%E5%82%A8/">
+                                <span class="chip bg-color">存储</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E5%AD%98%E5%82%A8/" class="post-category">
+                                存储
+                            </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -394,14 +407,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    78
+                    569
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    1 Min
+                    3 Min
                 </div>
                 
 
@@ -416,7 +429,36 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>title: 404<br>date: 2019-08-5 16:41:10<br>type: “404”<br>layout: “404”<br>description: “Oops～，我崩溃了！找不到你想要的页面 :(“</p>
+                <p>master node1 node2 client<br>192.168.1.31    master<br>192.168.1.29    node1<br>192.168.1.156 node2<br>192.168.1.98    client</p>
+<p>yum install wget vim epel-release<br>配置阿里云的centos7镜像和ceph.repo库<br>[root@master ceph]# cat /etc/yum.repos.d/ceph.repo<br>[Ceph]<br>name=Ceph packages for $basearch<br>baseurl=<a href="https://mirrors.tuna.tsinghua.edu.cn/ceph/rpm-jewel/el7/$basearch" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/ceph/rpm-jewel/el7/$basearch</a><br>enabled=1<br>gpgcheck=1<br>type=rpm-md<br>gpgkey=<a href="https://mirrors.tuna.tsinghua.edu.cn/ceph/keys/release.asc" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/ceph/keys/release.asc</a><br>priority=1</p>
+<p>[Ceph-noarch]<br>name=Ceph noarch packages<br>baseurl=<a href="https://mirrors.tuna.tsinghua.edu.cn/ceph/rpm-jewel/el7/noarch" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/ceph/rpm-jewel/el7/noarch</a><br>enabled=1<br>gpgcheck=1<br>type=rpm-md<br>gpgkey=<a href="https://mirrors.tuna.tsinghua.edu.cn/ceph/keys/release.asc" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/ceph/keys/release.asc</a><br>priority=1</p>
+<p>[ceph-source]<br>name=Ceph source packages<br>baseurl=<a href="https://mirrors.tuna.tsinghua.edu.cn/ceph/rpm-jewel/el7/SRPMS" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/ceph/rpm-jewel/el7/SRPMS</a><br>enabled=1<br>gpgcheck=1<br>type=rpm-md<br>gpgkey=<a href="https://mirrors.tuna.tsinghua.edu.cn/ceph/keys/release.asc" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/ceph/keys/release.asc</a><br>priority=1</p>
+<p>#关闭所有节点防火墙和SELINUX</p>
+<p>yum install yum-utils ceph ceph-deploy　　#安装ceph主程序和管理工具</p>
+<p>master节点：将ssh公钥导入其他节点方便调用时输入密码</p>
+<p>ceph-deploy new node1 node2 初始化节点</p>
+<p>cat /etc/ceph/ceph.conf　　#插入</p>
+<p>osd pool default size = 2</p>
+<p>ceph-deploy install node1 node2 #安装ceph</p>
+<p>ceph-deploy mon create-initial 　　##初始化mon节点</p>
+<hr>
+<p>node1:fdisk -l<br>fdisk /dev/sdb<br>mkfs.xfs /dev/sdb1<br>mkdir /dev/local/osd1<br>vim /etc/fstab<br>/dev/sdb1 /dev/local/osd1 xfs defaults 0 0<br>chown ceph:ceph /dev/local/osd1<br>node2:fdisk -l<br>fdisk /dev/sdb<br>mkfs.xfs /dev/sdb1<br>mkdir /dev/local/osd1<br>vim /etc/fstab<br>/dev/sdb1 /dev/local/osd1 xfs defaults 0 0<br>chown ceph:ceph /dev/local/osd1</p>
+<p>ceph-deploy osd prepare node1:/dev/local/osd1 node2:/dev/local/osd1<br>chmod +r /etc/ceph/ceph.client.admin.keyring<br>ceph-deploy osd activate node1:/dev/local/osd1 node2:/dev/local/osd1<br>ceph quorum_status –format json-pretty 　　##查看Ceph群集详细信息</p>
+<p>ceph health</p>
+<p>HEALTH_OK</p>
+<p> #这里有一个警告 可以不用太在意</p>
+<p>client测试</p>
+<p>ceph-deploy install ceph-client 　　##提示输入密码</p>
+<p>ceph-deploy admin ceph-client</p>
+<p>chmod +r /etc/ceph/ceph.client.admin.keyring</p>
+<p>master:　　ceph osd pool create cephfs_data 128 　　##数据存储池<br>pool ‘cephfs_data’ created<br>master:　　 ceph osd pool create cephfs_metadata 128 　　##元数据存储池<br>pool ‘cephfs_metadata’ created<br>master:　　ceph fs new cephfs cephfs_data cephfs_metadata 　　##创建文件系统<br>new fs with metadata pool 1 and data pool 2</p>
+<p> 挂载</p>
+<p>[root@ceph-client ~]# mkdir /mnt/ceph</p>
+<p>[root@ceph-client ~]# grep key /etc/ceph/ceph.client.admin.keyring |awk ‘{print $3}’ &gt;&gt;/etc/ceph/admin.secret</p>
+<p>[root@ceph-client ~]# cat /etc/ceph/admin.secret</p>
+<p>AQCd/x9bsMqKFBAAZRNXpU5QstsPlfe1/FvPtQ==<br>mount -t ceph 192.168.1.29:6789:/ /mnt/ceph/ -v -o name=admin,secretfile=/etc/ceph/admin.secret</p>
+<p>mount -t ceph 192.168.1.156:6789:/ /mnt/ceph1/ -v -o name=admin,secretfile=/etc/ceph/admin.secret</p>
+<p>dd if=/dev/zero of=/mnt/ceph/1.file bs=1G count=1</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -460,7 +502,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://yoursite.com/404.html">http://yoursite.com/404.html</a>
+                    <a href="http://yoursite.com/2020/05/11/ceph%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/">http://yoursite.com/2020/05/11/ceph%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -497,7 +539,11 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">No tag</span>
+                            
+                                <a href="/tags/%E5%AD%98%E5%82%A8/">
+                                    <span class="chip bg-color">存储</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -926,32 +972,38 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;Current
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
             <div class="card">
-                <a href="/404.html">
+                <a href="/2020/05/11/1/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="">
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="1">
                         
-                        <span class="card-title"></span>
+                        <span class="card-title">1</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            title: 404date: 2019-08-5 16:41:10type: “404”layout: “404”description: “Oops～，我崩溃了！找不到你想要的页面 :(“
+                            ---
+11111111111
 
-        document.query
+32423fdscnskcjslcs
+mjvsklnm;m
+rm -rf 
+thile :  呵呵呵沉默抗衰老承诺书出名了山东青岛
+data: sdifm,s;o jfmsslnf mf1
+---
+dwdw
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-05-11
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-05-11
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -960,7 +1012,6 @@
                         </span>
                     </div>
                 </div>
-
                 
             </div>
         </div>
@@ -968,24 +1019,23 @@
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                Current&nbsp;<i class="far fa-dot-circle"></i>
+                Next&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/404.html">
+                <a href="/2020/05/11/nginx/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="">
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="nginx">
                         
-                        <span class="card-title"></span>
+                        <span class="card-title">nginx</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            title: 404date: 2019-08-5 16:41:10type: “404”layout: “404”description: “Oops～，我崩溃了！找不到你想要的页面 :(“
-
-        document.query
+                            
+title: typora-vue-theme主题介绍date: 2018-09-07 09:25:00author: 赵奇img: /source/images/xxx.jpgtop: truecover: truecoverImg: 
                         
                     </div>
                     <div class="publish-info">
@@ -994,13 +1044,28 @@
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            Thomas
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Markdown/" class="post-category">
+                                    Markdown
+                                </a>
+                            
                             
                         </span>
                     </div>
                 </div>
-
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/nginx/">
+                        <span class="chip bg-color">nginx</span>
+                    </a>
+                    
+                    <a href="/tags/linux/">
+                        <span class="chip bg-color">linux</span>
+                    </a>
+                    
+                </div>
                 
             </div>
         </div>
