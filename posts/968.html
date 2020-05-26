@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="navi, Thomas">
+    <meta name="keywords" content="虚拟主机, Thomas">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>navi | Thomas</title>
+    <title>虚拟主机 | Thomas</title>
     <link rel="icon" type="image/jpeg" href="/22.jpg">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -375,12 +375,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/22.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">navi</h1>
+                    <h1 class="description center-align post-title">虚拟主机</h1>
                 </div>
             </div>
         </div>
@@ -495,12 +495,25 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">No tag</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA/">
+                                <span class="chip bg-color">虚拟主机</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/nginx/" class="post-category">
+                                nginx
+                            </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -509,28 +522,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
-                    2020-05-12
+                    2020-05-26
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>Update Date:&nbsp;&nbsp;
-                    2020-05-12
+                    2020-05-26
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    52
+                    2.6k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    1 Min
+                    9 Min
                 </div>
                 
 
@@ -545,7 +558,48 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <script>
+                <p>虚拟主机 就是指此server块对外提供的虚拟主机，设置了主机的名称并配置好NDS，用户就可以使用这个名称向此虚拟主机发送请求了。<br><code>server_name name ...;</code><br>对于name而言，name可以只有一个名称，也可以由多个名称并列。之间用空格隔开。每个名字技术一个域名。由二段或者三段组成。之间由点号 . 隔开<br><code>server_name myserver.com www.myserver.com</code><br>nginx服务器规定，第一个名称作为此虚拟主机的主要名称。<br>在name中可以使用通配符 ‘<em>’，但通配符只能在由三段字符串组成的名称的手段或者尾端，或者由两断字符串组成的名称的尾段<br>```server_name *.myserver.com <a href="http://www.myserver" target="_blank" rel="noopener">www.myserver</a>.</em>;<code>在name中还可以使用正则表达式，并使用波浪号~ 作为正则表达式字符串的开始标记</code>server_name ~^www\d+.myserver.com<code>\d 代表0-9
+正则表达式捕捉功能</code>server_name ~^www.(.+).com$;```<br>当请求通过<a href="http://www.myserver.com到达NGINX服务器端时，将会被上面的正则表达式所匹配。其中" target="_blank" rel="noopener">www.myserver.com到达NGINX服务器端时，将会被上面的正则表达式所匹配。其中</a> myserver将会被捕捉，并记录到$1中，在本server块的下文配置中，当需要myserver时，就可以使用$1 代替myserver了。</p>
+<p>也许服务器端包含很多虚拟主机，如果同时被多个虚拟主机匹配到如何处理呢<br>由于server_name 指令智齿使用通配符和正则表达式两种配置名称的方式<br>a    对于匹配方式不同的，按照以下的优先级选择虚拟主机，排在前面的优先处理请求<br>1    准确匹配    <code>server_name</code><br>2    通配符在开始时匹配server_name成功<br>3    通配符在结尾时匹配server_name成功<br>4    正则表达式匹配server_name 成功<br>b<br>在以上四种匹配方式中，如果server_name被处于统一由县级的匹配方式多次匹配成功。则首次匹配成功的虚拟主机处理请求。</p>
+<p>基于IP的虚拟主机配置<br>linux操作系统支持IP别名的添加。配置急于IP的虚拟主机，即为nginx服务器提供的媚态虚拟主机配置一个不同的ip，因此需要将网卡设置为同事能够监听多个IP地址。<br><code>ifconfig eth1:0 192.168.1.31 netmask 255.255.255.0 up</code><br><code>ifconfig eth1:1 192.168.1.32 netmask 255.255.255.0 up</code><br>命令中up表示立即启动此别名</p>
+<pre><code>http {
+    server
+    {
+        listen: 80;
+        server_name: 192.168.1.31}}</code></pre><p>配置location块<br>在nginx的官方文档中定义的location的语法结构为<br><code>location { = | ~ | ~* | ^~ } url...</code><br>其中url变量是带匹配的请求字符串，可以是不含正则表达式的字符串，可能是含有正则表达式的字符串，如 .\php$<br>=    用于标准url前，要求请求字符串与url严格匹配。如果已经匹配成功。就停止就绪向下搜索冰立即处理此请求。<br>~    用来表示url包含正则表达式，并且区分大小写<br><del>*    用于表示url包含正则表达式，并且不区分大小写。<br>如果url包含正则表达式，就必须要使用</del>或者~*标识</p>
+<p>我们知道，在浏览器传送url时会对一部分字符进行url编码，比如空格被编码为%20, 问号被编码为 %3f等，^<del>有一个特点是，他对url中的这些符号将会进行编码处理。比如 如果location块收到url为/html/%20/data    ,则当nginx服务器搜索到配置为 ^</del>/html/ /data 的location时，可以匹配成功</p>
+<p>配置请求的根目录<br>web服务器接收到网络请求之后，首先要在服务器端指定目录中寻找请求资源，在nginx服务器中，指令root就是用来配置这个根目录的<br><code>root path;</code><br>path为nginx服务器接收到请求以后查找资源的根目录路径。path变量中可以包含nginx服务器预设的大多数变量，只有$document_root and $realpath_root不可使用<br>此指令可以在http块，server块或者location块使用</p>
+<pre><code>location /data/
+{
+    root     /locationtest1;
+}
+curl /locationtest1/data/*.html     类似</code></pre><p>更改location的URL<br>在location还可以使用alias指令改变location接收到的url请求路径<br>alias    path；<br>其中path即为修改后的根路径，</p>
+<pre><code>location    ~^/data/(.+\.(htm|html))$ {
+alias    /locationtest1/other/$1;
+}</code></pre><p>设置网站的默认首页<br>指令index用于设置网站的默认首页，他一般可以有两个作用，一是用户在发出请求访问网站时，请求地址可以不写首页名称。二是 可以对一个请求，根据其请求内容而设置不同的首页。<br><code>index file.....;</code><br>其中 file变量可以包括多个文件名，其间使用空格分隔，也可以包含其他变量。</p>
+<pre><code>location    ~^/data/(.+)/web/    $
+{
+    index index.$1.html    index.my1.html    index.html;
+    }</code></pre><p>当location块接收到/data/locationtest/web/时，匹配成功，它首先将预置变量$1置为locationtest,然后localtion块接收到/data/index.htm的请求时，匹配成功。之后根据alias指令的设置将匹配到的/location/ data 更改为locationtest1/other/了.</p>
+<p>查看网络的错误页面<br>如果用户端尝试查看网页时遇到问题，服务器会将http错误从网站发送到web浏览器，如果无法显示网页，web浏览器会显示网站发送的实际错误网页或web浏览器内置的友好错误信息。nginx服务器智齿自定义错误网页的显示内容。可以通过这一功能在网站发生错误时为用户提供人性化的错误显示页面。</p>
+<p>HTTP消息        代码                    含义<br>已移动            <code>HTTP301</code>            请求的数据具有新的位置，并且更改是永久的。<br>已找到            <code>HTTP302</code>        请求的数据临时具有不同URL<br>请参阅其他        <code>HTTP303</code>            可在另一URL下找到对请求的响应。并且应使用get方法检索此响应。<br>未修改            <code>HTTP304</code>        未按预期修改文档<br>使用代理        <code>HTTP305</code>        必须通过位置字段中提供的代理来访问请求的资源<br>未使用            <code>HTTP306</code>    不再使用，但保留此代码以便将来使用<br>无法找到网页    <code>HTTP400</code>        可以连接到web服务器，但是由于web地址URL的问题，无法找到网页<br>网站拒绝显示此网页 <code>HTTP403</code>        可以连接到网站，但internet explorer没有显示网页的权限<br>无法找到网页    <code>HTTP404</code>    可以连接到网站，但找不到网页。导致此错误的原因有可能是该网页暂时不可用或网页已被删除<br>网站无法显示该页面    <code>HTTP405</code>        可以连接到网站，但网页内容无法下载到用户计算机。这通常是由网页编写方式问题引起的<br>无法读取此网页格式    <code>HTTP406</code>        能够从网站接受信息，但internet explorer不能识别其格式，因而无法正确地显示消息。<br>该网站太忙，无法显示此网页    <code>HTTP408或409</code>    服务器显示该网页的时间太长，或对同一网页的请求太多<br>网页不复存在    <code>HTTP410</code>            可以连接到网站，但无法找到网页，与HTTP错误404不同，此错误是永久性的，而且由网站管理员打开。<br>网站无法显示该页面    <code>HTTP500</code>    正在访问的网站出现服务器问题，<br>该问题组织了此网页的显示。常见的原因是网站正在维护或使用脚本的交互式网站上的程序出错<br>未执行            <code>HTTP501</code>        没有将正在访问的网站设置为显示浏览器所请求的内容<br>不支持的版本    HTTP505            改网站不支持浏览器用于请求网页HTTO协议 最常见的HTTP/1.1</p>
+<p>nginx设置网站错误页面的指令为error_page<br><code>error_page        code .... [=[response]]url</code><br><code>code</code>    要处理的HTTP错误代码，<br><code>response</code>        可选项，将code指定的错误代码转化为新的错误代码<br><code>url</code>        错误页面的路径或者网站地址，如果设置为路径，则是以nginx服务器安装路径下htmk目录为根路径的相对路径，如果设置为网址，nginx服务器会直接访问该网址获取错误页面</p>
+<pre><code>error_page    404    /404.html
+error_page    403        http://somewebsite.com/forbidden.html;
+
+error_page    410 =301    /empty.gif</code></pre><p>设置将410消息，使用nginx安装路径/html/empty.gif    返回给用户端301的消息（已移动）</p>
+<p>基于IP配置nginx的访问权限<br>nginx配置通过两种途径智齿基本访问权限的控制，其中一种是由HTTP标准ngx_http_access_module支持的，其通过IP来判断客户端是否拥有对NGINX的访问权限，<br>allow指令，用于设置允许访问nginx的客户端IP<br><code>allow     address    |CIDR    all;</code><br>address    允许方额嗯的客户端IP地址，不支持同时设置多个。如果有多个IP需要设置，需要重复使用allow指令。<br>CIDR    允许访问的客户端的CIDR地址，例如202.80.18.23/25，千面是32位ip地址。后面/25    代表改IP地址中钱25位是网络部分，<br>all        代表所有客户端访问。支持IPV6地址<br><code>allow    2620:100:e000:8001;</code><br>另一个指令是deny，作用刚好和allow指令相反，他用于设置禁止访问nginx的客户端IP。<br><code>deny    address|CIDR|ALL;</code></p>
+<p>这两个指令可以在http块 server块或者location块中配置，在使用这两个指令时，要注意设置all的用法</p>
+<pre><code>location / {
+    deny    192.168.1.1;
+    allow    192.168.1.0/24;
+    deny    all;
+}</code></pre><p>基于密码配置nginx的访问权限<br>nginx支持局域httobasic authentication协议的认证。该协议是一种http性质的认证办法，需要识别用户名和密码，认证失败的哭护短不具有访问nginx服务器的权限。该功能由HTTO标准模块ngx_http_basic_module支持，这是有两个指令需要学习<br>auth_basic指令，用于开启或者关闭该认证功能<br><code>auth_basic string |off;</code><br>string，开启该认证功能<br>off        关闭该认证功能<br><code>auth_basic_user_file file;</code><br>其中    file为密码文件的绝对路径<br>这里的密码文件支持铭文或者密码加密后的文件。</p>
+<pre><code>name1:password1
+name2:password2:comment
+name3:password3</code></pre><p>加密密码可以使用crypt()函数进行密码加密的格式，在linux平台上可以使用htpasswd命令生成。在php和perl等语言中，也可以提供crypt()函数<br><code>htpasswd -c -d /nginx/conf/pass_file username;</code><br>例 </p>
+<pre><code>    auth_basic_user_file /etc/nginx/nginx_userfile;
+    auth_basic string;</code></pre><script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }
@@ -588,7 +642,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://yoursite.com/navi/index.html">http://yoursite.com/navi/index.html</a>
+                    <a href="http://yoursite.com/posts/968.html">http://yoursite.com/posts/968.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -625,7 +679,11 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">No tag</span>
+                            
+                                <a href="/tags/%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA/">
+                                    <span class="chip bg-color">虚拟主机</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -1059,37 +1117,46 @@
                 <i class="far fa-dot-circle"></i>&nbsp;Current
             </div>
             <div class="card">
-                <a href="/navi/index.html">
+                <a href="/posts/968.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="navi">
+                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="虚拟主机">
                         
-                        <span class="card-title">navi</span>
+                        <span class="card-title">虚拟主机</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return
+                            虚拟主机 就是指此server块对外提供的虚拟主机，设置了主机的名称并配置好NDS，用户就可以使用这个名称向此虚拟主机发送请求了。server_name name ...;对于name而言，name可以只有一个名称，也可以由多个名称并列。之
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-05-12
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-05-26
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            Thomas
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/nginx/" class="post-category">
+                                    nginx
+                                </a>
+                            
                             
                         </span>
                     </div>
                 </div>
 
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA/">
+                        <span class="chip bg-color">虚拟主机</span>
+                    </a>
+                    
+                </div>
                 
             </div>
         </div>
@@ -1097,30 +1164,33 @@
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                Current&nbsp;<i class="far fa-dot-circle"></i>
+                Next&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/navi/index.html">
+                <a href="/posts/27743.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="navi">
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="nginx配置文件">
                         
-                        <span class="card-title">navi</span>
+                        <span class="card-title">nginx配置文件</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return
+                            nginx配置文件#这里是全局块，可以配置一些全局生效的配置，比如nginx启动用户，nginx的worke_press
+events {
+#event块，配置worker_connections，也是全局生效
+}
+
+http {
+#htt
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-05-12
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-05-26
                             </span>
                         <span class="publish-author">
                             
@@ -1130,7 +1200,6 @@
                         </span>
                     </div>
                 </div>
-
                 
             </div>
         </div>

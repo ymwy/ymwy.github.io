@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="navi, Thomas">
+    <meta name="keywords" content="nginx配置文件, Thomas">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>navi | Thomas</title>
+    <title>nginx配置文件 | Thomas</title>
     <link rel="icon" type="image/jpeg" href="/22.jpg">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -375,12 +375,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/22.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/2.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">navi</h1>
+                    <h1 class="description center-align post-title">nginx配置文件</h1>
                 </div>
             </div>
         </div>
@@ -509,28 +509,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
-                    2020-05-12
+                    2020-05-26
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>Update Date:&nbsp;&nbsp;
-                    2020-05-12
+                    2020-05-26
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    52
+                    2.9k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    1 Min
+                    12 Min
                 </div>
                 
 
@@ -545,7 +545,202 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <script>
+                <p>nginx配置文件<br>#这里是全局块，可以配置一些全局生效的配置，比如nginx启动用户，<code>nginx的worke_press</code></p>
+<pre><code>events {
+#event块，配置worker_connections，也是全局生效
+}
+
+http {
+#http块，nginx服务器配置中的重要部分，代理，缓存，日志定义等绝大部分功能以及第三方配置都可以放在这个模块中。
+
+server {
+#server块和虚拟主机有密切关系，（不明白虚拟主机的概念请自行谷歌），每一个http块可以包含多个server块，在server块中配置虚拟主机需要监听的端口，IP或域名
+
+location {
+#每一个server块中可以包含多个location块，从严格意义上讲，location块只是server块的一个指令，它会接收到域名后面跟着的字符串，根据字符串来进行匹配，对特定请求进行处理，重定向，缓存，以及应答控制等功能。
+}
+
+}
+
+}
+</code></pre><pre class=" language-shell"><code class="language-shell">user  nginx nginx;            
+worker_processes  1;        
+
+#error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+pid        logs/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+    #                  '$status $body_bytes_sent "$http_referer" '
+    #                  '"$http_user_agent" "$http_x_forwarded_for"';
+
+    #access_log  logs/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+
+    #gzip  on;
+
+    server {
+        listen       80;
+        server_name  localhost;
+
+        #charset koi8-r;
+
+        #access_log  logs/host.access.log  main;
+
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+
+        #error_page  404              /404.html;
+
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+
+        # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+        #
+        #location ~ \.php$ {
+        #    proxy_pass   http://127.0.0.1;
+        #}
+
+        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+        #
+        location ~ \.php$ {
+            root           html;
+            fastcgi_pass   127.0.0.1:9000;
+            fastcgi_index  index.php;
+            fastcgi_param  SCRIPT_FILENAME  /home/nginx-server/html$fastcgi_script_name;
+            include        fastcgi_params;
+        }
+
+        # deny access to .htaccess files, if Apache's document root
+        # concurs with nginx's one
+        #
+        #location ~ /\.ht {
+        #    deny  all;
+        #}
+    }
+
+
+    # another virtual host using mix of IP-, name-, and port-based configuration
+    #
+    #server {
+    #    listen       8000;
+    #    listen       somename:8080;
+    #    server_name  somename  alias  another.alias;
+
+    #    location / {
+    #        root   html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+
+
+    # HTTPS server
+    #
+    #server {
+    #    listen       443 ssl;
+    #    server_name  localhost;
+
+    #    ssl_certificate      cert.pem;
+    #    ssl_certificate_key  cert.key;
+
+    #    ssl_session_cache    shared:SSL:1m;
+    #    ssl_session_timeout  5m;
+
+    #    ssl_ciphers  HIGH:!aNULL:!MD5;
+    #    ssl_prefer_server_ciphers  on;
+
+    #    location / {
+    #        root   html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+
+}</code></pre>
+<p><code>user  nginx nginx;</code>        ##用于配置运行nginx服务器用户（组）的指令<br><code>user     nobody    nobody;</code>     user指令只能在全局快使用<br>worker_processes  1;        ##是nginx服务器实现并发处理服务的关键所在收到软件本身，操作系统本身资源的限制<br><code>worker_processes  auto|number;</code><br>使用后查看</p>
+<pre><code>ps -aux|grep nginx
+root      2091  0.0  0.0 112712   960 pts/0    S+   10:45   0:00 grep --color=auto nginx
+root      2327  0.0  0.0  46364  2092 ?        Ss   May15   0:00 nginx: master process /home/nginx-server/sbin/nginx
+nginx    31279  0.0  0.0  46776  2576 ?        S    10:21   0:00 nginx: worker process</code></pre><p>配置nginx存放进程pid路径<br>nginx进程作为系统的守护进程运行，我们需要在某文件中保存当前运行程序的主进程号<br><code>pid filename;</code><br>配置错误日志的存放路径<br>在全局快、http块、和server块中对可以对nginx服务器的日志进行相关配置。这里首先介绍全局块下日志的存放配置，后两种情况的配置基本相同，只是作用域不同。    使用的指令是error_log</p>
+<pre><code>error_log file|stderr|[debug|info|notice|warn|error|crit|alert|emerg];</code></pre><p>从语法结构看nginx服务器的日志智齿输出到某一固定的文件file或者输出到标准错误输出stderr;日志分级别是可选项，由低到高debug（需要在变异的时候使用 –with-debug 开启debug开关），设置某一级别后，比这以及别搞得日志也会被记录。比如设置warn级别后，级别为warn以及error、crit|alert|emerg 都会被记录下来<br>templase<br>error_log logs/error.log error;</p>
+<p>配置文件的导入<br>include file;<br>include conf.d/*.conf</p>
+<p>设置网络连接的序列化<br>nginx配置中包含了这样一条指令 accept_mutex,当其设置为开启的时候，将会对多个nginx进程接收连接进行序列化，防止多个进程对连接的争抢。<br>accept_mutex on |off;<br>其指令默认开启，只能在events块中进行配置</p>
+<p>设置是否允许同时接收多个网络连接<br>multi_accept on|off;<br>每个nginx服务器的worker process都有能力同时接收多个新到达的网络连接，但是这需要在配置文件中进行设置，其指令为multi_accept<br>此指令默认为关闭状态，即每一个worker process一次只能接收一个新到达的网络连接， 此指令只能在events块中进行生效。</p>
+<p>事件驱动选择<br>nginx服务器提供了多重是按驱动模型来处理网络信息。配置文件中为我们提供了相关的指令来强制nginx服务器选择哪种时间驱动模型进行消息处理，指令为use,语法结构为<br><code>use method;</code><br>其中method可选择的内容有： select 、poll 、kqueue 、 epoll 、 rtsig 、 /dev/null以及eventport<br>可以在编译时使用 –with-select_module和–without-select_module设置强制编译 select模块到nginx内核。使用 –with-poll_module和–wothout-poll_module设置是否强制编译poll模块到nginx内核。<br>此指令只能在events块中进行配置。</p>
+<p>配置最大连接数<br>指令<code>worker_connections</code>主要用来设置允许每一个 worker process同事开启的最大连接数。其语法结构为<br><code>worker_connections number;</code><br>此指令的默认设置为512.<br>这里的number数不仅仅包括和前端用户建立的连接数，而是包括所有可能的连接数。另外 number值不能大于操作系统支持打开的最大文件句柄数量。</p>
+<p>定义MIME=type<br>我们知道在常用的浏览器中，可以显示的内容有HTML.XML.GIF及Flash等种类繁多的文本、媒体库等资源，浏览器为了区分这些资源，需要使用MIME Type.换言之，MIME Type是网络资源的媒体类型。nginx服务器作为web服务器，必须能够识别前端请求的资源类型<br>在默认nginx配置文件中，我们按到在http全局块中有一下两行配置：<br>    <code>include mime.types;</code><br><code>default_type application/octet-stream;</code><br>第一行从外部引用了mime_types文件，我们来看一下他的内容分段</p>
+<pre><code>types {
+    text/html                                        html htm shtml;
+    text/css                                         css;
+    text/xml                                         xml;
+    image/gif                                        gif;
+    image/jpeg                                       jpeg jpg;
+    application/javascript                           js;
+    application/atom+xml                             atom;
+    application/rss+xml                              rss;
+
+    text/mathml                                      mml;
+    text/plain                                       txt;
+    text/vnd.sun.j2me.app-descriptor                 jad;
+    text/vnd.wap.wml                                 wml;
+    text/x-component                                 htc;
+
+    image/png                                        png;
+    image/svg+xml                                    svg svgz;
+    image/tiff                                       tif tiff;
+    image/vnd.wap.wbmp                               wbmp;
+    image/webp                                       webp;
+    image/x-icon                                     ico;
+    image/x-jng                                      jng;
+    image/x-ms-bmp                                   bmp;
+
+    font/woff                                        woff;
+    font/woff2                                       woff2;</code></pre><p>从mime_types文件的内容分段可以看到，其中定义了一个types结构，结构中包含了浏览器能够识别MIME类型以及对应于相关类型的文件后缀名。由于mime_types是主配置文件应用的第三方文件，一次，types也是nginx配置文件中的一个配置块，我们也可以称之为types块，其用于定义MIME类型<br>第二行中使用指令default_type配置了用于处理前端请求的MIME类型，其语法结构为<br>default_type mime-type;<br>如果不加指令默认为text/plain 此指令还可以在http块  server块或者location块进行配置。</p>
+<p>自定义服务目标日志</p>
+<p>nginx服务器智齿对服务日志的格式、大小、输出等进行配置，需要使用两个指令，分别为access_log和logformat指令<br>access_log指令语法为<br>access_log path[format[buffer=size]]<br>path    配置服务日志的文件存放的路径和名称<br>format    可选项自定义服务日志的格式字符串，也可以通过 格式串的名称 使用log_format指令定义好的格式<br>size  配置临时存放日志的内存缓冲区大小</p>
+<p>此指令可以在http块 、server块或者location块进行配置。<br>access_log logs/access.log combined;  combined 默认定义的日志格式字符串的名称</p>
+<pre><code>access_log     off;</code></pre><pre class=" language-conf"><code class="language-conf">log_format name string ,,,;
+teamplase
+
+http {
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';</code></pre>
+<p>配置允许sendfile方式传输文件<br>sendfile和sendfile_max_chunk以及他们的语法<br><code>sendfile    on|off;</code><br>用于开启或者关闭使用sendfile()传输文件，默认值为off。可以在http块、server块或者location块中进行配置<br><code>sendfile_max_chunk size;</code><br>其中，size值如果大于0，nginx进程的每个worker process每次调用sendfile()传输的数据量最大不能超过这个值，如果设置为0，则无限制。此指令可以在http块 server块或者location块中进行配置</p>
+<p>配置连接超时时间<br>用户建立会话连接后，nginx服务器可以保持这些连接打开一段时间，指令keepalive_timeout就是用来设置此时间的，其语法结构<br><code>keepalive_timeout timeout[header_timeout];</code><br>timeout    服务器端对连接的保持时间。默认值为75s<br>header_timeout可选项，在应对报文头部的keep-alive域设置超时时间： keep-alive<br><code>timeout=header_timeout</code>报文中的这个指令可以被Mozilla或者Konqueror识别<br>此指令可以在server块和location块配置<br><code>keepalive_timeout 120s 100s;</code><br>其含义是，在服务端保持连接的时间设置为120s,发给用户端的应答报文头部总kepp-alive域的超时时间设置为100S<br>此指令可以在http块 server块或者location块中进行配置</p>
+<p>单连接请求数上限<br>nginx服务器端和用户端建立会话连接后，用户端通过此链接发送请求，指令keepalive——requests用于限制用户通过某一连接向nginx服务器发送请求的次数<br><code>keepalive_requests number;</code><br>此指令还可以出现在server块和location块中，默认设置为100</p>
+<p>配置网络监听<br>配置监听使用指令listen,其配置方法主要有三种，我们先分别介绍三种配置的语法结构，然后统一介绍设计的相关变量和标识符<br>第一种配置监听IP地址</p>
+<pre><code>listen address[:port] [default_server] [setfib=number] [backlog=number] [rcvbuf=size] [sndbuf=size] [deferred] [accept_filter=filter] [bind] [ssl];</code></pre><p>第二种配置监听端口，其语法结构</p>
+<pre><code>listen port [default_server] [setfib=number] [backlog=number] [rcvbuf=size] [sndbuf=size]
+[accept_filter=filter] [bind] [ipv6only=on|off] [ssl]; </code></pre><p>第三种配置unix Domain Socket    一种在原有Socket框架上发展起来的IPC机制，用于在单个主机上执行客户/服务器通信。</p>
+<pre><code>listen unix:path [default_server] [setfib=number] [backlog=number] [rcvbuf=size] [sndbuf=size] [accept_filter=filter] [deferred]</code></pre><p>address IP地址，如果是IPv6地址 需要使用中括号[]括起来，比如[fe80::1]等<br>port    端口号    如果定义了IP地址没有定义端口号，就是用80端口<br>path socket文件路径，如/var/run/nginx.sock等<br>default_server    标识符    将此虚拟机主机设置为address:port 的默认主机</p>
+<p>注意<br>setflb=number,    nginx中使用这个变量为监听socket关联路由表，目前只对FreeBSD起作用 不常用<br>backlog=number,    设置监听函数listen()最多允许多少网络连接同时处于挂起状态，在FreeBSD中默认为-1，其他平台默认为511.<br>revbuf=size,    设置监听socket接收缓存区大小<br>sndbuf=size,    设置监听socket发送缓存区大小<br>deferred,标识符,    将accept()设置为Deferred模式。<br>accept_filter=filter    设置监听端口对请求的过滤，被过滤的内容不能被接收和处理。<br>bind,标识符        使用独立的bind()处理次address:port 一般情况下，对于端口相同二IP地址不同的多个连接，nginx服务器将只是用一个监听命令，并使用bind()处理端口相同的所有连接。<br>ssl ,标识符 设置会话连接使用SSL模式进行，茨表示服和nginx服务器提供的https服务有关，</p>
+<p><code>listen *:80|*:8000;</code><br><code>listen 192.168.1.1:8000;</code><br><code>listen 8000;</code></p>
+<p><code>listen 192.168.1.10 default_server backlog=1024;</code></p>
+<p>设置192.168.1.10的链接请求默认由此虚拟主机处理<br>并且允许最多1024网络连接同事处于挂起状态。</p>
+<script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }
@@ -588,7 +783,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://yoursite.com/navi/index.html">http://yoursite.com/navi/index.html</a>
+                    <a href="http://yoursite.com/posts/27743.html">http://yoursite.com/posts/27743.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -1054,42 +1249,49 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;Current
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
             <div class="card">
-                <a href="/navi/index.html">
+                <a href="/posts/968.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="navi">
+                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="虚拟主机">
                         
-                        <span class="card-title">navi</span>
+                        <span class="card-title">虚拟主机</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return
+                            虚拟主机 就是指此server块对外提供的虚拟主机，设置了主机的名称并配置好NDS，用户就可以使用这个名称向此虚拟主机发送请求了。server_name name ...;对于name而言，name可以只有一个名称，也可以由多个名称并列。之
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-05-12
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-05-26
+                        </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            Thomas
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/nginx/" class="post-category">
+                                    nginx
+                                </a>
+                            
                             
                         </span>
                     </div>
                 </div>
-
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA/">
+                        <span class="chip bg-color">虚拟主机</span>
+                    </a>
+                    
+                </div>
                 
             </div>
         </div>
@@ -1097,30 +1299,27 @@
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                Current&nbsp;<i class="far fa-dot-circle"></i>
+                Next&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/navi/index.html">
+                <a href="/posts/18763.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="navi">
+                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="nginx模块化">
                         
-                        <span class="card-title">navi</span>
+                        <span class="card-title">nginx模块化</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return
+                            nginx模块化nginx模块分为核心模块、标准模块、标准HTTP模块、可选HTTP模块、邮件服务模块以及第三方模块等五大类核心模块市值nginx服务器正常运行必不可少的模块，他们提供了nginx最基本最核心的服务，如进程管理、权限控制、错
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-05-12
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-05-26
                             </span>
                         <span class="publish-author">
                             
@@ -1130,7 +1329,6 @@
                         </span>
                     </div>
                 </div>
-
                 
             </div>
         </div>
