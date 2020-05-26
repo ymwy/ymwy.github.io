@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="cc, Thomas">
+    <meta name="keywords" content="nginx模块化, Thomas">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>cc | Thomas</title>
+    <title>nginx模块化 | Thomas</title>
     <link rel="icon" type="image/jpeg" href="/22.jpg">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -375,12 +375,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/10.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">cc</h1>
+                    <h1 class="description center-align post-title">nginx模块化</h1>
                 </div>
             </div>
         </div>
@@ -523,14 +523,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
-                    53
+                    2.2k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
-                    1 Min
+                    8 Min
                 </div>
                 
 
@@ -545,7 +545,86 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>ccccc</p>
+                <p>nginx模块化<br>nginx模块分为核心模块、标准模块、标准HTTP模块、可选HTTP模块、邮件服务模块以及第三方模块等五大类<br>核心模块市值nginx服务器正常运行必不可少的模块，他们提供了nginx最基本最核心的服务，如进程管理、权限控制、错误日志记录等。标准HTTP模块主要用于快速编译nginx后包含的模块。可选HTTP模块主要用于扩展标准的HTTP模块，使其能够处理一些特殊的HTTP请求,邮件服务模块主要用于支持nginx的邮件服务，第三方模块是为了扩展nginx服务器应用，完成特殊功能而由第三方机构或者个人编写的可编译到nginx中的模块，</p>
+<pre><code>[root@zabbix objs]# ls /usr/local/src/nginx-1.16.1/objs/
+autoconf.err  Makefile  nginx  nginx.8  ngx_auto_config.h  ngx_auto_headers.h  ngx_modules.c  ngx_modules.o  src</code></pre><pre><code>[root@zabbix objs]# cat ngx_modules.c|grep extern
+#extern ngx_module_t  ngx_core_module;
+#extern ngx_module_t  ngx_errlog_module;
+#extern ngx_module_t  ngx_conf_module;
+extern ngx_module_t  ngx_openssl_module;
+#extern ngx_module_t  ngx_regex_module;
+#extern ngx_module_t  ngx_events_module;
+#extern ngx_module_t  ngx_event_core_module;
+#extern ngx_module_t  ngx_epoll_module;
+extern ngx_module_t  ngx_thread_pool_module;
+extern ngx_module_t  ngx_http_module;
+extern ngx_module_t  ngx_http_core_module;
+extern ngx_module_t  ngx_http_log_module;
+extern ngx_module_t  ngx_http_upstream_module;
+extern ngx_module_t  ngx_http_v2_module;
+extern ngx_module_t  ngx_http_static_module;
+extern ngx_module_t  ngx_http_dav_module;
+extern ngx_module_t  ngx_http_autoindex_module;
+extern ngx_module_t  ngx_http_index_module;
+extern ngx_module_t  ngx_http_mirror_module;
+extern ngx_module_t  ngx_http_try_files_module;
+extern ngx_module_t  ngx_http_auth_basic_module;
+extern ngx_module_t  ngx_http_access_module;
+extern ngx_module_t  ngx_http_limit_conn_module;
+extern ngx_module_t  ngx_http_limit_req_module;
+extern ngx_module_t  ngx_http_realip_module;
+extern ngx_module_t  ngx_http_geo_module;
+extern ngx_module_t  ngx_http_map_module;
+extern ngx_module_t  ngx_http_split_clients_module;
+extern ngx_module_t  ngx_http_referer_module;
+extern ngx_module_t  ngx_http_rewrite_module;
+extern ngx_module_t  ngx_http_ssl_module;
+extern ngx_module_t  ngx_http_proxy_module;
+extern ngx_module_t  ngx_http_fastcgi_module;
+extern ngx_module_t  ngx_http_uwsgi_module;
+extern ngx_module_t  ngx_http_scgi_module;
+extern ngx_module_t  ngx_http_grpc_module;
+extern ngx_module_t  ngx_http_memcached_module;
+extern ngx_module_t  ngx_http_empty_gif_module;
+extern ngx_module_t  ngx_http_browser_module;
+extern ngx_module_t  ngx_http_flv_module;
+extern ngx_module_t  ngx_http_mp4_module;
+extern ngx_module_t  ngx_http_upstream_hash_module;
+extern ngx_module_t  ngx_http_upstream_ip_hash_module;
+extern ngx_module_t  ngx_http_upstream_least_conn_module;
+extern ngx_module_t  ngx_http_upstream_random_module;
+extern ngx_module_t  ngx_http_upstream_keepalive_module;
+extern ngx_module_t  ngx_http_upstream_zone_module;
+extern ngx_module_t  ngx_http_stub_status_module;
+extern ngx_module_t  ngx_http_write_filter_module;
+extern ngx_module_t  ngx_http_header_filter_module;
+extern ngx_module_t  ngx_http_chunked_filter_module;
+extern ngx_module_t  ngx_http_v2_filter_module;
+extern ngx_module_t  ngx_http_range_header_filter_module;
+extern ngx_module_t  ngx_http_gzip_filter_module;
+extern ngx_module_t  ngx_http_postpone_filter_module;
+extern ngx_module_t  ngx_http_ssi_filter_module;
+extern ngx_module_t  ngx_http_charset_filter_module;
+extern ngx_module_t  ngx_http_sub_filter_module;
+extern ngx_module_t  ngx_http_addition_filter_module;
+extern ngx_module_t  ngx_http_userid_filter_module;
+extern ngx_module_t  ngx_http_headers_filter_module;
+extern ngx_module_t  ngx_http_copy_filter_module;
+extern ngx_module_t  ngx_http_range_body_filter_module;
+extern ngx_module_t  ngx_http_not_modified_filter_module;</code></pre><p>由于使用<code>extern</code>关键词修饰，因此各模块均可以被其他模块访问<br>这里简要说明一下nginx中模块的明敏习惯。一般以ngx_作为前缀，_module作为后缀,中间使用一个或者多个英文单词描述模块的功能，不如ngx_core_module，中间的<code>core</code>表示该模块提供了nginx程序的核心功能。<br>蓑鲉的固有模块的源码放在编译目录下的src目录中，在src目录中，我们看到一共分成了<code>core、event、http、mail、和os</code>等6个目录。从这里看到，源码中包含了邮件服务的模块，但在快速编译默认不将其编译到nginx中</p>
+<p>1.核心模块<br>详细来说 nginx的核心模块主要包含对两类功能的支持，一类是主体功能，包括进程管理、权限控制、错误日志、解析日志等，另一类适用于响应请求时间必需的功能，包括事件驱动机制、正则表达式解析等</p>
+<p>nginx服务器的web请求处理机制<br>从设计构架上来说 nginx服务器是与众不同的，不同之处一方面体现在它的模块化设计，另一方体现在他对客户端请求的处理机制上<br>完成并行处理请求工作有三种方式可供选择：    多进程方式、多线程方式、异步方式</p>
+<p>多进程方式、多线程方式、异步方式多进程方式市值，服务器每当接收到一个客户端是，就有服务器朱进车女生成一个子进程出来和客户端建立连接进行交互，知道连接断开，该子进程就结束了。</p>
+<p>异步方式分为四种<br>同步阻塞     同步非阻塞    异步阻塞    异步非阻塞<br>同步阻塞<br>发送方向接收方发送请求后，一直等待响应。接收方处理请求时进行的IO操作如果不能马上得到结果，就一直等到返回结果后，才响应发送方，其间不能进行其他龚总，比如 在超市排队付账时，发送方和接收方收款员付款后需要等待收款员找零，其间不能做其他的事情，而收款员要等待收款机返回结果IO操作 响应期间也只能等待，不能做其他事情，这种方法实现简单，但是效率不高</p>
+<p>同步非阻塞<br>发送方向接收方发送其你去后，一直等待响应，接收方处理请求时进行的操作如果不能马上得到结果，就立即返回，去做其他的事情，但是由于没有得到请求处理结果，不影响发送发，发送方一直等待。一直到IO操作完成后，接收方获得结果响应发送方后，接收方才佳能进入下一次请求过程。在实际中不使用这种方式。</p>
+<p>异步阻塞<br>发送方向接收方发送请求后，不用等待响应，可以接着进行其他工作，，接收方处理请求时进行的IO操作如果不能马上得到结果，就一直等到返回结果后，才响应发送方，其间不能进行其他工作    在实际中不使用这种方式。<br>异步非阻塞方式<br>发送方向接收方发送请求后，不用等待响应。可继续其他工作。接收方处理请求时记性io操作如果不能马上得到结果，也不等待，而是马上返回去做其他事情。当io操作完成以后，将完成状态和结果通知接收方，接收方在响应发送方。这种方法最实用</p>
+<p>nginx服务器如何处理请求<br>进程模型有两种 single模式和master—worker模式</p>
+<p>nginx服务器的事件处理机制<br>IO如何调用把自己的状态通知给工作进程<br>一半解决这个问题的方案有两种，一是让工作进程在进行其他工作的过程中将隔一段时间就去检查一下IO的运行状态，如果完成，就去响应客户端，如果未完成 就继续正在进行的工作，而是Io调用在完成后能中东通知工作进程。对于欠着，虽然工作进程在IO调用过程中没有等待，但不断的检查仍然在时间和资源商导致了不小的开销，最理想的是第二种<br>具体来说 select/poll/epoll/kqueue等这样的系统调用就是用来支持第二种解决方案的。这些系统调用，也被常称为事件驱动模型，他们提出糊了一种机制，让进程可以同时处理多个并发请求，不用关心IO调用的具体状态。IO调用完全由时间驱动模型来管理</p>
+<p>nginx服务器的事件驱动模型<br>事件驱动模型一般是由事件收集器、时间发送器和事件处理器三部分基本单元组成</p>
+<p>nginx服务器的进程<br>一类是主进程 一类是是由主进程生成的工作进程， 为缓存索引建立索引的进程</p>
+<p>主进程 master process<br>主要功能是与外界通信和对内部其他进程进行管理<br>读取nginx配置文件并验证其有效性和正确性<br>建立、绑定和关闭Socket<br>按照外界指令，比如重启、升级及退出服务器等指令<br>不中断服务，实现平滑重启 应用新配置<br>不中断服务，实现平滑升级，升级失败进行回滚处理<br>开启日志文件，获取文件的描述符<br>编译和处理perl脚本。</p>
+<p>工作进程<br>正常情况下生存与主进程的整个生命周期<br>接收客户端请求<br>IO调用，获取响应数据<br>与后端服务器通信，接收后端服务器处理结果<br>发送请求结果，响应客户端请求<br>接收主程序指令，比如重启、升级和退出等指令</p>
+<p>缓存索引重建及管理进程<br>cache模块，主要由缓存索引重建cache loader和缓存索引管理 cache manager两类进程完成工作<br>缓存索引重建进程是在nginx服务器启动一段时间之后默认是1分钟由主进程生成，在缓存元数据重建完成后就自动退出；缓存索引管理进程一般存在于主进程的整个生命周期，负责对缓存索引进行管理</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -589,7 +668,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://yoursite.com/posts/55656.html">http://yoursite.com/posts/55656.html</a>
+                    <a href="http://yoursite.com/posts/18763.html">http://yoursite.com/posts/18763.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -1060,23 +1139,19 @@
                 <i class="far fa-dot-circle"></i>&nbsp;Current
             </div>
             <div class="card">
-                <a href="/posts/55656.html">
+                <a href="/posts/18763.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="cc">
+                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="nginx模块化">
                         
-                        <span class="card-title">cc</span>
+                        <span class="card-title">nginx模块化</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            ccccc
-
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { 
+                            nginx模块化nginx模块分为核心模块、标准模块、标准HTTP模块、可选HTTP模块、邮件服务模块以及第三方模块等五大类核心模块市值nginx服务器正常运行必不可少的模块，他们提供了nginx最基本最核心的服务，如进程管理、权限控制、错
                         
                     </div>
                     <div class="publish-info">
@@ -1371,7 +1446,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">9.4k</span>&nbsp;字
+                class="white-color">11.6k</span>&nbsp;字
             
             
             
